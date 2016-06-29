@@ -1,5 +1,4 @@
 import java.sql.{Connection, DriverManager}
-
 import scala.collection.mutable
 
 /**

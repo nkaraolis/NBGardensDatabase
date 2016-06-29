@@ -19,7 +19,7 @@ object OrderItem extends Entity{
     }
 
     override def createEntity(): Unit = {
-      var addNewOrder = new OrderItemDescription(stringParams(0), stringParams(1), intParams(0), stringParams(2), stringParams(3))
-      orderItems += addNewOrder
+      var addNewItem = new OrderItemDescription(stringParams(0), stringParams(1), intParams(0), stringParams(2), stringParams(3))
+      orderItems += addNewItem
     }
 }

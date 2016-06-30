@@ -1,5 +1,6 @@
-import java.sql.{Connection, DriverManager}
-import scala.collection.mutable
+import java.sql.{Connection, Date, DriverManager}
+
+import scala.collection.mutable.Queue
 
 /**
   * Created by Nick on 28/06/2016.
@@ -15,14 +16,15 @@ trait Entity {
   var connection: Connection = _
 
   //Table names, column names and types which are set differently for the different tables
-  var dbTableName : String
-  var dbTableColumns : mutable.Queue[String]
-  var dbTableTypes: mutable.Queue[String]
+  var dbTableName: String
+  var dbTableColumns: Queue[String]
+  var dbTableTypes: Queue[String]
 
   //Parameters required for object creation in tables
-  var stringParams = new mutable.Queue[String]
-  var intParams = new mutable.Queue[Int]
-  var doubleParams = new mutable.Queue[Double]
+  var stringParams = new Queue[String]
+  var intParams = new Queue[Int]
+  var doubleParams = new Queue[Double]
+  var dateParams = new Queue[Date]
 
   //Implemented in subclasses to populate their collections
   def createEntity(): Unit = {}
@@ -37,25 +39,32 @@ trait Entity {
       while (rs.next) {
         //Collect data for each row
         var counter = 0
-        while (counter<entity.dbTableColumns.length){
-          if(entity.dbTableTypes(counter).equals("int")){
+        while (counter < entity.dbTableColumns.length) {
+          if (entity.dbTableTypes(counter).equals("int")) {
             intParams += rs.getInt(dbTableColumns(counter))
           }
-          if(entity.dbTableTypes(counter).equals("string")){
+          if (entity.dbTableTypes(counter).equals("string")) {
             stringParams += rs.getString(dbTableColumns(counter))
           }
-          if(entity.dbTableTypes(counter).equals("double")){
+          if (entity.dbTableTypes(counter).equals("double")) {
             doubleParams += rs.getDouble(dbTableColumns(counter))
+          }
+          if (entity.dbTableTypes(counter).equals("date")) {
+            dateParams += rs.getDate(dbTableColumns(counter))
           }
           counter += 1
         }
         entity.stringParams = stringParams
         entity.intParams = intParams
         entity.doubleParams = doubleParams
-        entity.createEntity()
-        stringParams.clear()
-        intParams.clear()
-        doubleParams.clear()
+        entity.dateParams = dateParams
+
+        entity.createEntity
+
+        stringParams.clear
+        intParams.clear
+        doubleParams.clear
+        dateParams.clear
       }
     }
     catch {
@@ -64,4 +73,6 @@ trait Entity {
     connection.close
   }
 
+  def findByID(entityDescID: String, entityDescList: Queue[EntityDescription]): Unit = {
+  }
 }

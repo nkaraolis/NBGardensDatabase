@@ -1,0 +1,7 @@
+out/
+.idea/
+#Prog1.iml
+#NBGardensV0.2.iml
+*.iml
+project/
+target/
